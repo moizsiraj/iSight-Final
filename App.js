@@ -15,6 +15,12 @@ export default function App() {
       const { status } = await Camera.requestPermissionsAsync();
       setHasPermission(status === 'granted');
     })();
+
+    setTimeout(function () {
+      Speech.speak(
+        'Tap the bottom half to classify object or read text. Tap top half to stop speaking.'
+      );
+    }, 1000);
   }, []);
 
   if (hasPermission === null) {
@@ -76,7 +82,7 @@ export default function App() {
   }
 
   async function uploadImageAsync(uri) {
-    const apiUrl = 'http://192.168.1.103:8000/upload';
+    const apiUrl = 'http://52.172.148.196:8000/upload';
     let uriParts = uri.split('.');
     let fileType = uriParts[uriParts.length - 1];
 
@@ -107,13 +113,8 @@ export default function App() {
   }
 
   return (
-    <View style={{ flex: 1 }}>
-      <Camera
-        ratio={'20:9'}
-        ref={cam}
-        style={{ flex: 1, height: '80%' }}
-        type={type}
-      >
+    <View style={{ flex: 1, flexDirection: 'column' }}>
+      <Camera ratio={'20:9'} ref={cam} style={{ flex: 1 }} type={type}>
         <View
           style={{
             flex: 1,
@@ -124,7 +125,36 @@ export default function App() {
           <TouchableOpacity
             style={{
               flex: 1,
-              height: '50%',
+              height: '100%',
+              alignSelf: 'flex-start',
+              alignItems: 'center',
+              backgroundColor: 'transparent',
+            }}
+            onPress={() => Speech.stop()}
+          >
+            <Text
+              style={{
+                fontSize: 18,
+                marginBottom: 10,
+                padding: 100,
+                color: 'white',
+              }}
+            >
+              Stop Speaking
+            </Text>
+          </TouchableOpacity>
+        </View>
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: 'transparent',
+            flexDirection: 'row',
+          }}
+        >
+          <TouchableOpacity
+            style={{
+              flex: 1,
+              height: '100%',
               alignSelf: 'flex-end',
               alignItems: 'center',
               backgroundColor: 'transparent',
@@ -138,7 +168,7 @@ export default function App() {
                 color: 'white',
               }}
             >
-              Tap
+              Tap to Classify Object or Read Text
             </Text>
           </TouchableOpacity>
         </View>
